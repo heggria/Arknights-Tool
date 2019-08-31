@@ -103,28 +103,6 @@ export default {
       //console.log(this.skillBaseInfo.bbKey);
     },
     setBuffCorrection() {
-        let buff={
-            'atk':0,//自身攻击buff
-            'atk_scale':0,//自身攻击倍率
-            "atk_scale[drone]":0,//无人机
-            "atk_scale[normal]":0,//普通对象
-            'def':0,//自身防御buff
-            'stun':0,//眩晕时间
-            'times':1,//攻击次数
-            'max_target':1,//攻击范围内最大攻击数
-            "move_speed":0,//命中目标移动速度
-            "duration":0,//buff持续时间
-            "base_attack_time":0,//攻击间隔
-            "talent@prob":0,//天赋概率
-            "attack_speed":0,//攻击速度
-            "attack@times":0,//最终攻击次数
-            "attack@atk_scale":1,//最终攻击倍率
-            "burn.atk_scale":0,//燃烧倍率
-            "attack@stun":0,//普攻眩晕时间
-            "attack@atk_to_hp_recovery_ratio":0,//普攻回血
-            'attack@max_target':1,//普攻最大攻击数
-            'force':0,//推力
-        }
     }
   }
 };
