@@ -28,14 +28,14 @@
             @change="lChange"
           ></el-input-number>
           <div style="width:158px;margin-left:10px">
-            <el-slider v-model="favor" :format-tooltip="formatTooltip" @input="fChange"></el-slider>
+            <el-slider v-model="favor" :format-tooltip="formatTooltip" :step='0.1' @input="fChange"></el-slider>
           </div>
           <div style="margin-bottom:10px">{{character.itemUsage}}</div>
           <div>
             <div class="value">
               最大血量
               <br />
-              <span class="num">{{Math.round(characterBD.maxHp+characterFavor.maxHp)}}</span>
+              <span class="num">{{Math.round(characterBD.maxHp)+Math.floor(characterFavor.maxHp)}}</span>
               <span
                 class="snum"
               >{{Math.round(characterFavor.maxHp)===0||characterFavor.maxHp===undefined?'':'+'+Math.round(characterFavor.maxHp)}}</span>
@@ -43,7 +43,7 @@
             <div class="value">
               攻击力
               <br />
-              <span class="num">{{Math.round(characterBD.atk+characterFavor.atk)}}</span>
+              <span class="num">{{Math.round(characterBD.atk)+Math.floor(characterFavor.atk)}}</span>
               <span
                 class="snum"
               >{{Math.round(characterFavor.atk)===0||characterFavor.atk===undefined?'':'+'+Math.round(characterFavor.atk)}}</span>
@@ -51,7 +51,7 @@
             <div class="value">
               防御力
               <br />
-              <span class="num">{{Math.round(characterBD.def+characterFavor.def)}}</span>
+              <span class="num">{{Math.round(characterBD.def)+Math.floor(characterFavor.def)}}</span>
               <span
                 class="snum"
               >{{Math.round(characterFavor.def)===0||characterFavor.def===undefined?'':'+'+Math.round(characterFavor.def)}}</span>
@@ -247,7 +247,7 @@ export default {
           .replace(/[\<\>]/g, "")
           .replace("\\n", ",");
         this.skillDes[flag] = des;
-        console.log(des);
+        console.log(this.skills[flag].skillId);
         let k;
         let r = /\{(.*?)\}/g;
         k = des.match(r);
