@@ -1,30 +1,63 @@
 <template>
   <div id="skill">
     <div v-html="skillStr"></div>
-    <div class="value">
-      攻击倍率(乘算)
-      <br />
-      <span class="num">{{cBCorrection[0].value}}</span>
-    </div>
-    <div class="value">
-      攻击次数
-      <br />
-      <span class="num">{{cBCorrection[1].value}}</span>
-    </div>
-    <div class="value">
-      最终攻击倍率(乘算)
-      <br />
-      <span class="num">{{cBCorrection[2].value}}</span>
-    </div>
-    <div class="value">
-      最终攻击次数
-      <br />
-      <span class="num">{{cBCorrection[3].value}}</span>
-    </div>
-    <div class="value">
-      攻击间隔(加算)
-      <br />
-      <span class="num">{{cBCorrection[4].value}}</span>
+
+    <el-divider></el-divider>
+    <div>
+      <div class="value">
+        回复类型
+        <br />
+        <span
+          class="num"
+          style="font-size:17px"
+        >{{skillBaseInfo.spData.spType===1?'自动回复':skillBaseInfo.spData.spType}}</span>
+      </div>
+      <div class="value">
+        初始技力
+        <br />
+        <span class="num">{{skillBaseInfo.spData.initSp}}</span>
+      </div>
+      <div class="value">
+        释放技力
+        <br />
+        <span class="num">{{skillBaseInfo.spData.spCost}}</span>
+      </div>
+      <div class="value">
+        技力增量
+        <br />
+        <span class="num">{{skillBaseInfo.spData.increment}}</span>
+      </div>
+      <div class="value">
+        充能次数
+        <br />
+        <span class="num">{{skillBaseInfo.spData.maxChargeTime}}</span>
+      </div>
+
+      <div class="value">
+        攻击倍率(乘算)
+        <br />
+        <span class="num">{{cBCorrection[0].value}}</span>
+      </div>
+      <div class="value">
+        攻击次数
+        <br />
+        <span class="num">{{cBCorrection[1].value}}</span>
+      </div>
+      <div class="value">
+        最终攻击倍率(乘算)
+        <br />
+        <span class="num">{{cBCorrection[2].value}}</span>
+      </div>
+      <div class="value">
+        最终攻击次数
+        <br />
+        <span class="num">{{cBCorrection[3].value}}</span>
+      </div>
+      <div class="value">
+        攻击间隔(加算)
+        <br />
+        <span class="num">{{cBCorrection[4].value}}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -36,7 +69,7 @@ export default {
   name: "skill",
   data() {
     return {
-      skillId: "skchr_angel_3",
+      skillId: "skchr_angel_2",
       skillLevelMax: 7, //技能最大等级（预）
       skillLevel: 10, //技能当前等级
       skillInfo: {}, //技能所有信息
@@ -44,7 +77,8 @@ export default {
       skillBaseInfo: {
         //技能当前基本信息
         blackBoard: {}, //技能buff属性值
-        bbKey: [] //技能buff key
+        bbKey: [], //技能buff key
+        spData: {}
       },
       cBCorrection: [
         { name: "atk_scale", value: 0 }, //攻击倍率
@@ -124,6 +158,9 @@ export default {
       for (let i in this.skillBaseInfo.blackBoard) {
         this.skillBaseInfo.bbKey[i] = this.skillBaseInfo.blackBoard[i].key;
       }
+      this.skillBaseInfo.spData = this.skillInfo.levels[
+        this.skillLevel - 1
+      ].spData;
       //console.log(this.skillBaseInfo.bbKey);
     },
     setBuffCorrection() {
@@ -151,14 +188,13 @@ export default {
 <style>
 .value {
   width: 50%;
-  float: left;
   margin-top: 20px;
 }
 .num {
   font-size: 20px;
   color: #409eff;
 }
-#skill{
+#skill {
   width: 300px;
 }
 </style>
