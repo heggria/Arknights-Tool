@@ -1,63 +1,25 @@
 <template>
   <div id="skill">
-    <div v-html="skillStr"></div>
+    <span style="font-size:20px;color:bule">{{skillInfo.levels[skillLevel-1].name}}</span>
 
+    <span style="font-size:14px;color:bule">{{skillLevel}}级</span>
+    <el-divider></el-divider>
+    <div v-html="skillStr"></div>
     <el-divider></el-divider>
     <div>
-      <div class="value">
-        回复类型
-        <br />
-        <span
-          class="num"
-          style="font-size:17px"
-        >{{skillBaseInfo.spData.spType===1?'自动回复':skillBaseInfo.spData.spType}}</span>
-      </div>
-      <div class="value">
-        初始技力
-        <br />
-        <span class="num">{{skillBaseInfo.spData.initSp}}</span>
-      </div>
-      <div class="value">
-        释放技力
-        <br />
-        <span class="num">{{skillBaseInfo.spData.spCost}}</span>
-      </div>
-      <div class="value">
-        技力增量
-        <br />
-        <span class="num">{{skillBaseInfo.spData.increment}}</span>
-      </div>
-      <div class="value">
-        充能次数
-        <br />
-        <span class="num">{{skillBaseInfo.spData.maxChargeTime}}</span>
-      </div>
-
-      <div class="value">
-        攻击倍率(乘算)
-        <br />
-        <span class="num">{{cBCorrection[0].value}}</span>
-      </div>
-      <div class="value">
-        攻击次数
-        <br />
-        <span class="num">{{cBCorrection[1].value}}</span>
-      </div>
-      <div class="value">
-        最终攻击倍率(乘算)
-        <br />
-        <span class="num">{{cBCorrection[2].value}}</span>
-      </div>
-      <div class="value">
-        最终攻击次数
-        <br />
-        <span class="num">{{cBCorrection[3].value}}</span>
-      </div>
-      <div class="value">
-        攻击间隔(加算)
-        <br />
-        <span class="num">{{cBCorrection[4].value}}</span>
-      </div>
+      <value
+        title="回复类型"
+        :value="this.skillBaseInfo.spData.spType===1?'自动回复':this.skillBaseInfo.spData.spType"
+      ></value>
+      <value title="初始技力" :value="this.skillBaseInfo.spData.initSp"></value>
+      <value title="释放技力" :value="this.skillBaseInfo.spData.spCost"></value>
+      <value title="技力增量" :value="this.skillBaseInfo.spData.increment"></value>
+      <value title="充能次数" :value="this.skillBaseInfo.spData.maxChargeTime"></value>
+      <value title="攻击倍率/加" :value="this.cBCorrection[0].value"></value>
+      <value title="攻击次数" :value="this.cBCorrection[1].value"></value>
+      <value title="最终攻击倍率/乘" :value="this.cBCorrection[2].value"></value>
+      <value title="最终攻击次数" :value="this.cBCorrection[3].value"></value>
+      <value title="攻击间隔/加" :value="this.cBCorrection[4].value"></value>
     </div>
   </div>
 </template>
@@ -65,17 +27,19 @@
 <script>
 /* eslint-disable */
 import skill_table from "@/assets/skill_table.json";
+import value from "@/components/part/value";
 export default {
   name: "skill",
   data() {
     return {
-      skillId: "skchr_angel_2",
+      skillId: "skchr_angel_3",
       skillLevelMax: 7, //技能最大等级（预）
       skillLevel: 10, //技能当前等级
       skillInfo: {}, //技能所有信息
       skillStr: "", //技能描述
       skillBaseInfo: {
         //技能当前基本信息
+        duration: 0,
         blackBoard: {}, //技能buff属性值
         bbKey: [], //技能buff key
         spData: {}
@@ -86,13 +50,21 @@ export default {
         { name: "attack@atk_scale", value: 0 }, //最终攻击倍率
         { name: "attack@times", value: 0 }, //最终攻击次数
         { name: "base_attack_time", value: 0 } //攻击间隔
-      ]
+      ],
+      skillOpenDPS: 0,
+      atk: 600,
+      attackTime: 1,
+      finalAttck: 0,
+      finalAttckTime: 0,
+      attackTimes: 0
     };
   },
+  components: { value: value },
   created() {
     this.getSkillInfo();
     console.log(this.skillBaseInfo);
     this.setBuffCorrection();
+    this.countDPS();
   },
   methods: {
     getSkillInfo() {
@@ -102,7 +74,7 @@ export default {
           this.skillInfo = skill_table[j];
           this.skillLevelMax = this.skillInfo.levels.length;
         }
-      //console.log(this.skillInfo);
+      console.log(this.skillInfo);
       this.findSkillBlackBoard();
       this.getSkillStr();
     },
@@ -161,6 +133,9 @@ export default {
       this.skillBaseInfo.spData = this.skillInfo.levels[
         this.skillLevel - 1
       ].spData;
+      this.skillBaseInfo.duration = this.skillInfo.levels[
+        this.skillLevel - 1
+      ].duration;
       //console.log(this.skillBaseInfo.bbKey);
     },
     setBuffCorrection() {
@@ -180,21 +155,21 @@ export default {
       }
       console.log(this.cBCorrection);
       console.log(this.skillBaseInfo.bbKey);
+    },
+    countDPS() {
+      this.finalAttck = this.atk * (1 + 0.06) * this.cBCorrection[2].value;
+      this.finalAttckTime =
+        1 / ((100 + 19) / (this.attackTime + this.cBCorrection[4].value) / 100);
+      this.skillOpenDPS =
+        (this.finalAttck / this.finalAttckTime) * this.cBCorrection[3].value;
+      console.log(this.finalAttck, this.finalAttckTime);
     }
   }
 };
 </script>
 
 <style>
-.value {
-  width: 50%;
-  margin-top: 20px;
-}
-.num {
-  font-size: 20px;
-  color: #409eff;
-}
 #skill {
-  width: 300px;
+  width: 100%;
 }
 </style>

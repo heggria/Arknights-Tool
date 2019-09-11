@@ -192,7 +192,7 @@
         </div>
         <div style="clear:both;"></div>
       </div>
-      <div class="attributes-box"></div>
+      <div class="attributes-box"><skill></skill></div>
     </div>
   </div>
 </template>
@@ -201,6 +201,7 @@
 /* eslint-disable */
 import characterDF from "@/assets/character_table.json";
 import skill_table from "@/assets/skill_table.json";
+import skill from "@/components/skill.vue"
 export default {
   name: "character",
   data() {
@@ -233,6 +234,7 @@ export default {
       ]
     };
   },
+  components:{'skill':skill},
   created: function() {
     //console.log(this.getCList("SUPPORT",5));
     this.setCMenu();
@@ -570,15 +572,6 @@ export default {
   content: "";
   display: block;
   clear: both;
-}
-.value {
-  width: 50%;
-  float: left;
-  margin-bottom: 10px;
-}
-.num {
-  font-size: 20px;
-  color: #409eff;
 }
 .x{
   margin-bottom:5px;
