@@ -28,7 +28,7 @@ function countAtkInterval(base_atk_interval, atk_speed_plus, attack_interval_plu
     for (let i in attack_interval_plus) {
         attack_interval_sum += attack_interval_plus[i];
     }
-    console.log(atk_speed_sum,attack_interval_sum)
+    //console.log(atk_speed_sum,attack_interval_sum)
     final_atk_interval = 1/(((100+atk_speed_sum)/(base_atk_interval+attack_interval_sum))/100);
     return final_atk_interval;
 }
