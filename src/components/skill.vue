@@ -1,8 +1,7 @@
 <template>
   <div id="skill">
-    <span style="font-size:20px;color:bule">{{skillInfo.levels[skillLevel-1].name}}</span>
-
-    <span style="font-size:14px;color:bule">{{skillLevel}}级</span>
+    <span style="font-size:25px">{{skillInfo.levels[skillLevel-1].name}}</span>
+    <span style="font-size:12px">{{skillLevel}}级</span>
     <el-divider></el-divider>
     <div v-html="skillStr"></div>
     <el-divider></el-divider>
@@ -20,6 +19,8 @@
       <value title="最终攻击倍率/乘" :value="this.cBCorrection[2].value"></value>
       <value title="最终攻击次数" :value="this.cBCorrection[3].value"></value>
       <value title="攻击间隔/加" :value="this.cBCorrection[4].value"></value>
+      <value title="最终攻击力" :value="cAtk(600,300,[0.15,0.1],1,1.1).toFixed(2)"></value>
+      <value title="最终攻击间隔" :value="cAtkInterval(1,[12],[-0.11]).toFixed(3)"></value>
     </div>
   </div>
 </template>
@@ -28,11 +29,12 @@
 /* eslint-disable */
 import skill_table from "@/assets/skill_table.json";
 import value from "@/components/part/value";
+import {countAtk,countAtkInterval} from "@/components/calculate/calculate.js";
 export default {
   name: "skill",
   data() {
     return {
-      skillId: "skchr_angel_3",
+      skillId: "skchr_angel_2",
       skillLevelMax: 7, //技能最大等级（预）
       skillLevel: 10, //技能当前等级
       skillInfo: {}, //技能所有信息
@@ -67,6 +69,12 @@ export default {
     this.countDPS();
   },
   methods: {
+    cAtk(base_atk, friend_atk, atk_plus, atk_multiply, atk_finally_multiply){
+      return countAtk(base_atk, friend_atk, atk_plus, atk_multiply, atk_finally_multiply);
+    },
+    cAtkInterval(base_atk_interval, atk_speed_plus, attack_interval_plus){
+      return countAtkInterval(base_atk_interval, atk_speed_plus, attack_interval_plus);
+    },
     getSkillInfo() {
       this.skillInfo = {};
       for (let j in skill_table)
