@@ -1,6 +1,6 @@
 <template>
   <div id="character">
-    <div class="block">
+    <div class="block"><!--
       <div class="attributes-box">
         <div style="width:178px;float:left;">
           <el-cascader
@@ -191,7 +191,7 @@
           </div>
         </div>
         <div style="clear:both;"></div>
-      </div>
+      </div>-->
       <div class="attributes-box"><skill></skill></div>
     </div>
   </div>

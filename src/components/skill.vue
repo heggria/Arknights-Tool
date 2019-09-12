@@ -19,8 +19,13 @@
       <value title="最终攻击倍率/乘" :value="this.cBCorrection[2].value"></value>
       <value title="最终攻击次数" :value="this.cBCorrection[3].value"></value>
       <value title="攻击间隔/加" :value="this.cBCorrection[4].value"></value>
-      <value title="最终攻击力" :value="cAtk(600,300,[0.15,0.1],1,1.1).toFixed(2)"></value>
-      <value title="最终攻击间隔" :value="cAtkInterval(1,[12],[-0.11]).toFixed(3)"></value>
+      <value title="最终攻击力" :value="this.finalAttck.toFixed(2)"></value>
+      <value title="最终攻击间隔" :value="this.finalAttckTime.toFixed(3)"></value>
+      <value title="最终防御" :value="this.finalDef.toFixed(2)"></value>
+      <value title="最终法抗" :value="this.finalSpellR.toFixed(2)"></value>
+      <value title="单次攻击伤害" :value="this.hrut.toFixed(2)"></value>
+      <value title="单攻击过程伤害" :value="(this.hrut*this.testInfo.c.atkTimes).toFixed(2)"></value>
+      <value title="技能期间均总伤" :value="((this.hrut*this.testInfo.c.atkTimes)*(15/this.finalAttckTime)).toFixed(1)"></value>
     </div>
   </div>
 </template>
@@ -29,7 +34,13 @@
 /* eslint-disable */
 import skill_table from "@/assets/skill_table.json";
 import value from "@/components/part/value";
-import {countAtk,countAtkInterval} from "@/components/calculate/calculate.js";
+import {
+  countAtk,
+  countAtkInterval,
+  countDef,
+  countHurt,
+  countSpellR
+} from "@/components/calculate/calculate.js";
 export default {
   name: "skill",
   data() {
@@ -54,11 +65,52 @@ export default {
         { name: "base_attack_time", value: 0 } //攻击间隔
       ],
       skillOpenDPS: 0,
-      atk: 600,
-      attackTime: 1,
       finalAttck: 0,
       finalAttckTime: 0,
-      attackTimes: 0
+      finalSpellR: 0,
+      attackTimes: 0,
+      finalDef: 0,
+      hrut: 0,
+      testInfo: {
+        c: {
+          type: 0, //伤害类型
+          atk: 1013,//攻击
+          fArmyAtk: 0,
+          atkPlus: [0.16,1.7],
+          atkMultiply: 1,
+          atkFinallyMultiply: 1,
+          atkInterval: 1.5,//攻击速度
+          atkSpeedPlus: [],
+          atkIntervalPlus: [],
+          atkTimes: 2,//攻击次数
+          def: 100, //防御
+          defPlus: [],
+          defPlusPer: [],
+          spellR: 40, //法抗
+          spellRPlus: [],
+          spellRPlusPer: [],
+          phySuscep: [], //物理易伤
+          spellSuscep: [] //法术易伤
+        },
+        e: {
+          type: 0,
+          atk: 700,
+          fArmyAtk: 300,
+          atkPlus: [],
+          atkMultiply: 1,
+          atkFinallyMultiply: 1,
+          atkInterval: 1,
+          atkSpeedPlus: [],
+          atkIntervalPlus: [],
+          atkTimes: 1,
+          def: 100, //物理
+          defPlus: [],
+          defPlusPer: [],
+          spellResistance: 0, //法术
+          spellResistancePlus: [],
+          spellResistancePlusPer: []
+        }
+      }
     };
   },
   components: { value: value },
@@ -69,11 +121,26 @@ export default {
     this.countDPS();
   },
   methods: {
-    cAtk(base_atk, friend_atk, atk_plus, atk_multiply, atk_finally_multiply){
-      return countAtk(base_atk, friend_atk, atk_plus, atk_multiply, atk_finally_multiply);
+    cAtk(base_atk, friend_atk, atk_plus, atk_multiply, atk_f_multiply) {
+      return countAtk(
+        base_atk,
+        friend_atk,
+        atk_plus,
+        atk_multiply,
+        atk_f_multiply
+      );
     },
-    cAtkInterval(base_atk_interval, atk_speed_plus, attack_interval_plus){
-      return countAtkInterval(base_atk_interval, atk_speed_plus, attack_interval_plus);
+    cAtkInterval(base_atk_interval, atk_speed_plus, attack_i_plus) {
+      return countAtkInterval(base_atk_interval, atk_speed_plus, attack_i_plus);
+    },
+    cDef(base_def, def_plus, def_plus_per) {
+      return countDef(base_def, def_plus, def_plus_per);
+    },
+    cSpellR(spellR, spellRPlus, spellRPlusPer) {
+      return countSpellR(spellR, spellRPlus, spellRPlusPer);
+    },
+    cHurt(type, atk, def, spellR, phySuscep, spellSuscep) {
+      return countHurt(type, atk, def, spellR, phySuscep, spellSuscep);
     },
     getSkillInfo() {
       this.skillInfo = {};
@@ -165,12 +232,36 @@ export default {
       console.log(this.skillBaseInfo.bbKey);
     },
     countDPS() {
-      this.finalAttck = this.atk * (1 + 0.06) * this.cBCorrection[2].value;
-      this.finalAttckTime =
-        1 / ((100 + 19) / (this.attackTime + this.cBCorrection[4].value) / 100);
-      this.skillOpenDPS =
-        (this.finalAttck / this.finalAttckTime) * this.cBCorrection[3].value;
-      console.log(this.finalAttck, this.finalAttckTime);
+      this.finalAttck = this.cAtk(
+        this.testInfo.c.atk,
+        this.testInfo.c.fArmyAtk,
+        this.testInfo.c.atkPlus,
+        this.testInfo.c.atkMultiply,
+        this.testInfo.c.atkFinallyMultiply
+      );
+      this.finalAttckTime = this.cAtkInterval(
+        this.testInfo.c.atkInterval,
+        this.testInfo.c.atkSpeedPlus,
+        this.testInfo.c.atkIntervalPlus
+      );
+      this.finalDef = this.cDef(
+        this.testInfo.c.def,
+        this.testInfo.c.defPlus,
+        this.testInfo.c.defPlusPer
+      );
+      this.finalSpellR = this.cSpellR(
+        this.testInfo.c.spellR,
+        this.testInfo.c.spellRPlus,
+        this.testInfo.c.spellRPlusPer
+      );
+      this.hrut = this.cHurt(
+        this.testInfo.c.type,
+        this.finalAttck,
+        this.finalDef,
+        this.finalSpellR,
+        this.testInfo.c.phySuscep,
+        this.testInfo.c.spellSuscep
+      );
     }
   }
 };
