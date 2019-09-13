@@ -25,7 +25,11 @@
       <value title="最终法抗" :value="this.finalSpellR.toFixed(2)"></value>
       <value title="单次攻击伤害" :value="this.hrut.toFixed(2)"></value>
       <value title="单攻击过程伤害" :value="(this.hrut*this.testInfo.c.atkTimes).toFixed(2)"></value>
-      <value title="技能期间均总伤" :value="((this.hrut*this.testInfo.c.atkTimes)*(15/this.finalAttckTime)).toFixed(1)"></value>
+      <value
+        title="技能期间均总伤"
+        :value="((this.hrut*this.testInfo.c.atkTimes)*(15/this.finalAttckTime)).toFixed(1)"
+      ></value>
+      <el-button @click="test()">默认按钮</el-button>
     </div>
   </div>
 </template>
@@ -74,15 +78,15 @@ export default {
       testInfo: {
         c: {
           type: 0, //伤害类型
-          atk: 1013,//攻击
+          atk: 1013, //攻击
           fArmyAtk: 0,
-          atkPlus: [0.16,1.7],
+          atkPlus: [0.16, 1.7],
           atkMultiply: 1,
           atkFinallyMultiply: 1,
-          atkInterval: 1.5,//攻击速度
+          atkInterval: 1.5, //攻击速度
           atkSpeedPlus: [],
           atkIntervalPlus: [],
-          atkTimes: 2,//攻击次数
+          atkTimes: 2, //攻击次数
           def: 100, //防御
           defPlus: [],
           defPlusPer: [],
@@ -262,6 +266,10 @@ export default {
         this.testInfo.c.phySuscep,
         this.testInfo.c.spellSuscep
       );
+    },
+    test() {
+      this.$store.commit("newNum", 1);
+      console.log(this.$store.getters.getChangedNum);
     }
   }
 };

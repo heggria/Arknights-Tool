@@ -15,21 +15,21 @@ export default {
       baseData: {
         c: {
           atk:832,
-          blood: 4225,
+          blood: 2000,
           atkSpeed: 1200,
           def: 334,
           treatment: 70
         },
         e: {
-          atk: 1000,
-          atkSpeed: 6000
+          atk: 1850,
+          atkSpeed: 20000
         }
       },
-      lastAtkSpeed: 1600,
+      lastAtkSpeed: 1200,
       cLastAtkTime: 0,
       eLastAtkTime: 0,
       nowTime: 0,
-      nowBlood: 4225,
+      nowBlood: 2000,
       eNowBlood: 37500
     };
   },
@@ -109,7 +109,7 @@ export default {
       this.round();
     },
     round() {
-      for (this.nowTime = 0; this.nowTime <= 56000; this.nowTime += 10) {
+      for (this.nowTime = 0; this.nowTime <= 100000; this.nowTime += 10) {
         this.opinionData.push([this.nowTime, this.nowBlood]);
         this.eData.push([this.nowTime, this.eNowBlood]);
         this.cAtk();
@@ -130,7 +130,7 @@ export default {
           changeAtkSpeed = this.baseData.c.atkSpeed/2
       }
       //获取当前攻击状态，如果上一次攻击结束，则进行攻击,并改变攻击间隔
-      if (this.nowTime - this.lastAtkSpeed >= this.cLastAtkTime) {
+      if (this.nowTime===0||this.nowTime - this.lastAtkSpeed >= this.cLastAtkTime) {
         //攻击回血
         if (this.nowBlood + this.baseData.c.treatment <= this.baseData.c.blood) {
           this.nowBlood += this.baseData.c.treatment;
@@ -146,7 +146,7 @@ export default {
     eAtk() {
       //console.log();
       //获取当前攻击状态，如果上一次攻击结束，则进行攻击,并改变攻击间隔
-      if (this.nowTime - this.baseData.e.atkSpeed >= this.eLastAtkTime) {
+      if (this.nowTime===0||this.nowTime - this.baseData.e.atkSpeed >= this.eLastAtkTime) {
         //攻击
         this.nowBlood -= this.baseData.e.atk;
         //置攻击时间和攻击间隔
