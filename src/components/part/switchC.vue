@@ -1,16 +1,12 @@
 <template>
-  <div class="inputBox">
-    <div class="inputBoxLable">{{lable}}</div>
-    <div style="width:178px">
-      <el-input-number
-        size="mini"
-        v-model="value"
-        :min="min"
-        :max="max"
-        :label="lable"
-        @change="setSpecificED"
-      ></el-input-number>
-    </div>
+  <div class="switchBox">
+    <div class="switchTable">{{lable}}</div>
+    <el-switch
+      v-model="value"
+      active-color="#13ce66"
+      inactive-color="#ff4949"
+      @change="setSpecificED"
+    ></el-switch>
   </div>
 </template>
 
@@ -18,11 +14,11 @@
 export default {
   /* eslint-disable */
   //标签，最小值，最大值，绑定值
-  props: ["lable", "min", "max", "defaultValue"],
+  props: ["lable", "defaultValue"],
   data() {
     return {
       enemyData: this.$store.getters.getEnemyData,
-      value: 0
+      value: false
     };
   },
   created() {
@@ -31,7 +27,7 @@ export default {
   },
   methods: {
     getSpecificEnemyData() {
-      let value = -1;
+      let value = false;
       for (let index in this.enemyData) {
         if (this.defaultValue === index) {
           value = this.enemyData[this.defaultValue];
@@ -46,22 +42,19 @@ export default {
         }
       }
       this.$store.dispatch("setNewEnemyData", this.enemyData);
-      //console.log(this.$store.getters.getEnemyData.atk);
+      //console.log(this.$store.getters.getEnemyData.silenceImmune)
     }
   }
 };
 </script>
 
 <style>
-.inputBox {
-  width: 178px;
-  height: 60px;
-}
-.inputBoxLable {
-  float: left;
-  line-height: 28px;
-  width: 178px;
-  font-size: 14px;
+.switchTable {
+  margin: 5px;
   font-weight: bold;
+}
+.switchBox {
+  width: 33%;
+  float: left;
 }
 </style>
