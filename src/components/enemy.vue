@@ -1,11 +1,15 @@
 <template>
   <div class="attributes-box">
+    <div style="font-size:20px;margin-top:15px;font-weight:600">
+      <span>敌人信息</span>
+    </div>
+    <el-divider></el-divider>
     <inputnum lable="最大血量" :min="0" :max="1000000" defaultValue="maxHp"></inputnum>
     <inputnum lable="攻击力" :min="0" :max="10000" defaultValue="atk"></inputnum>
     <inputnum lable="攻击间隔" :min="0.1" :max="10000" defaultValue="baseAttackTime"></inputnum>
     <inputnum lable="攻击次数" :min="0" :max="10" defaultValue="atkTimes"></inputnum>
     <inputnum lable="防御" :min="0" :max="10000" defaultValue="def"></inputnum>
-    <inputnum lable="法抗" :min="0" :max="10000" defaultValue="magicResistance"></inputnum>
+    <inputnum lable="法抗" :min="0" :max="100" defaultValue="magicResistance"></inputnum>
     <inputnum lable="移动速度" :min="0" :max="10" defaultValue="moveSpeed"></inputnum>
     <inputnum lable="每秒回血" :min="0" :max="10000" defaultValue="hpRecoveryPerSec"></inputnum>
     <div style="margin-top:5px;height:60px">
@@ -33,12 +37,4 @@ export default {
 </script>
 
 <style>
-.switchTable {
-  margin: 5px;
-  font-weight: bold;
-}
-.switchBox {
-  width: 33%;
-  float: left;
-}
 </style>

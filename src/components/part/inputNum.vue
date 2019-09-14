@@ -56,6 +56,7 @@ export default {
 .inputBox {
   width: 178px;
   height: 60px;
+  margin:0 auto;
 }
 .inputBoxLable {
   float: left;

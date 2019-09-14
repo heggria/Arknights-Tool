@@ -5,13 +5,12 @@ import Router from 'vue-router'
 import character from './components/character'
 import skill from './components/skill'
 import test from './components/test'
-import enemy from './components/part/enemy'
+import enemy from './components/enemy'
 
 Vue.use(Router)
 
 export default new Router({
     routes: [
-        { path: '/', name: 'character', component: character },
         { path: '/character', name: 'character', component: character },
         { path: '/skill', name: 'skill', component: skill },
         { path: '/test', name: 'test', component: test },

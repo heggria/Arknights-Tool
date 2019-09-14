@@ -1,35 +1,5 @@
 <template>
-  <div id="app"><!--
-    <div class="box">
-      <div class="attributes-box">
-        <p>{{characterDatas.char_010_chen.name}}</p>
-        <p>{{characterDatas.char_010_chen.itemUsage}}</p>
-      </div>
-      <div class="attributes-box">
-        <div style="width:160px;margin:0 auto">
-          <el-slider
-            v-model="characterLevel"
-            :step="1"
-            :min="1"
-            :max="6"
-            show-stops
-            :show-tooltip="false"
-            @input="changeLevel()"
-          ></el-slider>
-        </div>
-        <p>{{characterLevel}}级</p>
-        <p>最大血量 ：{{characterAttributes.maxHp}}</p>
-        <p>攻击力 ：{{characterAttributes.atk}}</p>
-        <p>防御力 ：{{characterAttributes.def}}</p>
-        <p>法术抗性：{{characterAttributes.magicResistance}}</p>
-        <p>攻击速度：{{characterAttributes.attackSpeed}}%</p>
-        <p>攻击间隔：{{characterAttributes.baseAttackTime}}</p>
-        <p>每秒回复生命值 ：{{characterAttributes.hpRecoveryPerSec}}</p>
-      </div>
-      <div class="attributes-box">
-        <p>单体真实伤害DPS ：{{characterAttributes.atk/characterAttributes.baseAttackTime}}</p>
-      </div>
-    </div>-->
+  <div id="app">
     <router-view />
   </div>
 </template>
@@ -37,10 +7,12 @@
 <script>
 import enemyDataF from "@/assets/enemy_database.json";
 import characterDataF from "@/assets/character_table.json";
+import character from "@/components/character.vue";
+import enemy from "@/components/enemy.vue";
 /* eslint-disable */
 export default {
   name: "app",
-  components: {},
+  components: {character:character,enemy:enemy},
   data() {
     return {
       enemyDatas: enemyDataF.enemies,

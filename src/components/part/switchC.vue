@@ -52,6 +52,7 @@ export default {
 .switchTable {
   margin: 5px;
   font-weight: bold;
+  font-size: 12px;
 }
 .switchBox {
   width: 33%;
