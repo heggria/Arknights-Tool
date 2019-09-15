@@ -4,7 +4,21 @@
       <span style="font-size:20px;font-weight:600;">控制面板</span>
     </div>
     <el-divider>
-      <span style="font-size:14px;font-weight:600">通用</span>
+    </el-divider>
+    <div style="width:140px;margin:10px auto">
+      <el-tooltip style="float:left" class="item" effect="dark" content="停止" placement="top">
+        <el-button circle class="el-icon-switch-button"></el-button>
+      </el-tooltip>
+      <el-tooltip style="float:left" class="item" effect="dark" content="暂停/继续" placement="top">
+        <el-button circle class="el-icon-video-pause"></el-button>
+      </el-tooltip>
+      <el-tooltip style="float:left" class="item" effect="dark" content="开始" placement="top">
+        <el-button circle class="el-icon-video-play"></el-button>
+      </el-tooltip>
+    </div>
+    <div style="clear:both;height:10px"></div>
+    <el-divider>
+      <span style="font-size:14px;font-weight:600">通用设置</span>
     </el-divider>
     <inputNL
       lable="运行时间"
@@ -35,29 +49,14 @@
     ></inputNL>
     <switchS lable="某方死后中止" defaultValue="autoStop"></switchS>
     <el-divider>
-      <span style="font-size:14px;font-weight:600">干员</span>
+      <span style="font-size:14px;font-weight:600">干员设置</span>
     </el-divider>
     <switchS lable="是否攻击" defaultValue="charAtk"></switchS>
     <el-divider>
-      <span style="font-size:14px;font-weight:600">敌人</span>
+      <span style="font-size:14px;font-weight:600">敌人设置</span>
     </el-divider>
     <switchS lable="是否攻击" defaultValue="enemyAtk"></switchS>
     <switchS lable="突袭难度" defaultValue="assault" :display="true" remark="自定义敌人属性增幅：1.2倍"></switchS>
-    <el-divider>
-      <span style="font-size:16px;font-weight:600">控制</span>
-    </el-divider>
-    <div style="width:140px;margin:10px auto">
-      <el-tooltip style="float:left" class="item" effect="dark" content="停止" placement="top">
-        <el-button circle class="el-icon-switch-button"></el-button>
-      </el-tooltip>
-      <el-tooltip style="float:left" class="item" effect="dark" content="暂停/继续" placement="top">
-        <el-button circle class="el-icon-video-pause"></el-button>
-      </el-tooltip>
-      <el-tooltip style="float:left" class="item" effect="dark" content="开始" placement="top">
-        <el-button circle class="el-icon-video-play"></el-button>
-      </el-tooltip>
-    </div>
-    <div style="clear:both;height:10px"></div>
   </div>
 </template>
 
