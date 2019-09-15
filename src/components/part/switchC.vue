@@ -6,6 +6,7 @@
       active-color="#13ce66"
       inactive-color="#ff4949"
       @change="setSpecificED"
+      style="float:right"
     ></el-switch>
   </div>
 </template>
@@ -50,12 +51,14 @@ export default {
 
 <style>
 .switchTable {
-  margin: 5px;
   font-weight: bold;
   font-size: 12px;
+  line-height: 20px;
+  float: left;
 }
 .switchBox {
-  width: 33%;
-  float: left;
+  width: 90%;
+  height:30px;
+  margin:5%;
 }
 </style>

@@ -17,15 +17,16 @@ const state = {
     'silenceImmune': true,
   },
   charBaseData: {
-    "maxHp": 261,
-    "atk": 42,
-    "def": 16,
+    "maxHp": 2610,
+    "atk": 420,
+    "def": 160,
     "magicResistance": 0.0,
     "cost": 3,
     "blockCnt": 1,
     "moveSpeed": 1.0,
     "attackSpeed": 100.0,
     "baseAttackTime": 2.85,
+    'atkTimes': 1,
     "respawnTime": 200,
     "hpRecoveryPerSec": 0.0,
     "spRecoveryPerSec": 1.0,
@@ -74,6 +75,17 @@ const state = {
     "stunImmune": false,
     "silenceImmune": false
   },
+  //配置
+  config: {
+    runTime: 30000,
+    runSpeed: 1.0,
+    fullSimulation: false,
+    autoRelease: false,
+    autoStop: false,
+    charAtk: true,
+    enemyAtk: true,
+    assault: false,
+  }
 };
 const getters = {
   getEnemyData() {
@@ -87,6 +99,9 @@ const getters = {
   },
   getTemporaryCD() {
     return state.temporaryCD
+  },
+  getConfig() {
+    return state.config
   }
 };
 const mutations = {
@@ -101,6 +116,12 @@ const mutations = {
   },
   changeTemporaryCD(state, a) {
     state.temporaryCD = a;
+  },
+  changeConfig(state, a) {
+    state.config = a;
+  },
+  changeState(state, a) {
+    state.config.fullSimulation = a;
   }
 };
 const actions = {
@@ -115,6 +136,12 @@ const actions = {
   },
   setTemporaryCD(context, n) {
     context.commit('changeTemporaryCD', n)
+  },
+  setConfig(context, n) {
+    context.commit('changeConfig', n)
+  },
+  setState(context, n) {
+    context.commit('changeState', n)
   }
 };
 const store = new Vuex.Store({

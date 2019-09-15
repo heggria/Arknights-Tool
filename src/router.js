@@ -6,6 +6,8 @@ import character from './components/character'
 import skill from './components/skill'
 import test from './components/test'
 import enemy from './components/enemy'
+import data from './components/data'
+import battleSetting from './components/battleSetting'
 
 Vue.use(Router)
 
@@ -15,5 +17,7 @@ export default new Router({
         { path: '/skill', name: 'skill', component: skill },
         { path: '/test', name: 'test', component: test },
         { path: '/enemy', name: 'enemy', component: enemy },
+        { path: '/data', name: 'data', component: data },
+        { path: '/battleSetting', name: 'battleSetting', component: battleSetting },
     ]
 })

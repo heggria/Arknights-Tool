@@ -1,6 +1,6 @@
 <template>
   <div id="character">
-    <div class="block"><!--
+    <div class="block">
       <div class="attributes-box">
         <div style="width:178px;float:left;">
           <el-cascader
@@ -28,51 +28,16 @@
             @change="lChange"
           ></el-input-number>
           <div style="width:158px;margin-left:10px">
-            <el-slider v-model="favor" :format-tooltip="formatTooltip" :step='0.1' @input="fChange"></el-slider>
+            <el-slider v-model="favor" :format-tooltip="formatTooltip" :step="0.1" @input="fChange"></el-slider>
           </div>
           <div style="margin-bottom:10px">{{character.itemUsage}}</div>
           <div>
-            <div class="value">
-              最大血量
-              <br />
-              <span class="num">{{Math.round(characterBD.maxHp)+Math.floor(characterFavor.maxHp)}}</span>
-              <span
-                class="snum"
-              >{{Math.round(characterFavor.maxHp)===0||characterFavor.maxHp===undefined?'':'+'+Math.round(characterFavor.maxHp)}}</span>
-            </div>
-            <div class="value">
-              攻击力
-              <br />
-              <span class="num">{{Math.round(characterBD.atk)+Math.floor(characterFavor.atk)}}</span>
-              <span
-                class="snum"
-              >{{Math.round(characterFavor.atk)===0||characterFavor.atk===undefined?'':'+'+Math.round(characterFavor.atk)}}</span>
-            </div>
-            <div class="value">
-              防御力
-              <br />
-              <span class="num">{{Math.round(characterBD.def)+Math.floor(characterFavor.def)}}</span>
-              <span
-                class="snum"
-              >{{Math.round(characterFavor.def)===0||characterFavor.def===undefined?'':'+'+Math.round(characterFavor.def)}}</span>
-            </div>
-            <div class="value">
-              法术抗性
-              <br />
-              <span class="num">{{characterBD.magicResistance*1}}</span>
-            </div>
-            <div class="value">
-              攻击间隔(s)
-              <br />
-              <span class="num">{{characterBD.baseAttackTime*1}}</span>
-            </div>
-            <div class="value">
-              真实dps
-              <br />
-              <span
-                class="num"
-              >{{Math.round((characterBD.atk+characterFavor.atk)/characterBD.baseAttackTime)}}</span>
-            </div>
+            <value title="法术抗性" :value="this.characterBD.magicResistance"></value>
+            <value title="攻击间隔(s)" :value="this.characterBD.baseAttackTime"></value>
+            <value
+              title="真实dps"
+              :value="Math.round((this.characterBD.atk+this.characterFavor.atk)/this.characterBD.baseAttackTime)"
+            ></value>
           </div>
           <div style="width:178px;float:left;">
             <el-collapse accordion>
@@ -105,9 +70,10 @@
                       class="num"
                     >{{skills[0]===undefined?'NULL':skills[0].levels[skillsLevel[0]-1].spData.initSp}}</span>
                   </div>
-                  <div class="value"  style="width:100%">
+                  <div class="value" style="width:100%">
                     <span
-                      class="num" style="font-size:14px"
+                      class="num"
+                      style="font-size:14px"
                     >{{skills[2]===undefined?'NULL':(skills[0].levels[skillsLevel[0]-1].spData.spType===1?'自动回复':(skills[0].levels[skillsLevel[0]-1].spData.spType===2?'攻击回复':(skills[0].levels[skillsLevel[0]-1].spData.spType===4?'受击回复':'被动技能')))}}</span>
                   </div>
                 </div>
@@ -128,60 +94,10 @@
                     :max="skillLMax"
                     @input="getSkillStr(1)"
                   ></el-slider>
-                  <div class="value x">
-                    技力花费
-                    <br />
-                    <span
-                      class="num"
-                    >{{skills[1]===undefined?'NULL':skills[1].levels[skillsLevel[1]-1].spData.spCost}}</span>
-                  </div>
-                  <div class="value x">
-                    初始技力
-                    <br />
-                    <span
-                      class="num"
-                    >{{skills[1]===undefined?'NULL':skills[1].levels[skillsLevel[1]-1].spData.initSp}}</span>
-                  </div>
                   <div class="value" style="width:100%">
                     <span
-                      class="num" style="font-size:14px"
-                    >{{skills[2]===undefined?'NULL':(skills[1].levels[skillsLevel[1]-1].spData.spType===1?'自动回复':(skills[1].levels[skillsLevel[1]-1].spData.spType===2?'攻击回复':(skills[1].levels[skillsLevel[1]-1].spData.spType===4?'受击回复':'被动技能')))}}</span>
-                  </div>
-                </div>
-                <div>{{skillDes[1]}}</div>
-              </el-collapse-item>
-              <el-collapse-item>
-                <template slot="title">
-                  <el-radio
-                    v-model="radio"
-                    label="3"
-                  >{{skills[2]===undefined?'暂无数据':skills[2].levels[0].name}} {{cSkillsLevel(2)}}</el-radio>
-                </template>
-                <div style="width:158px;margin-left:10px">
-                  <el-slider
-                    v-model="skillsLevel[2]"
-                    :step="1"
-                    :min="1"
-                    :max="skillLMax"
-                    @input="getSkillStr(2)"
-                  ></el-slider>
-                  <div class="value x">
-                    技力花费
-                    <br />
-                    <span
                       class="num"
-                    >{{skills[2]===undefined?'NULL':skills[2].levels[skillsLevel[2]-1].spData.spCost}}</span>
-                  </div>
-                  <div class="value x">
-                    初始技力
-                    <br />
-                    <span
-                      class="num"
-                    >{{skills[2]===undefined?'NULL':skills[2].levels[skillsLevel[2]-1].spData.initSp}}</span>
-                  </div>
-                  <div class="value" style="width:100%">
-                    <span
-                      class="num" style="font-size:14px"
+                      style="font-size:14px"
                     >{{skills[2]===undefined?'NULL':(skills[2].levels[skillsLevel[2]-1].spData.spType===1?'自动回复':(skills[2].levels[skillsLevel[2]-1].spData.spType===2?'攻击回复':(skills[2].levels[skillsLevel[2]-1].spData.spType===4?'受击回复':'被动技能')))}}</span>
                   </div>
                   <div>{{skillDes[2]}}</div>
@@ -191,8 +107,10 @@
           </div>
         </div>
         <div style="clear:both;"></div>
-      </div>-->
-      <div class="attributes-box"><skill></skill></div>
+      </div>
+      <div class="attributes-box">
+        <skill></skill>
+      </div>
     </div>
   </div>
 </template>
@@ -201,7 +119,8 @@
 /* eslint-disable */
 import characterDF from "@/assets/character_table.json";
 import skill_table from "@/assets/skill_table.json";
-import skill from "@/components/skill.vue"
+import skill from "@/components/skill.vue";
+import value1 from "@/components/part/value";
 export default {
   name: "character",
   data() {
@@ -234,7 +153,7 @@ export default {
       ]
     };
   },
-  components:{'skill':skill},
+  components: { skill: skill, value: value1 },
   created: function() {
     //console.log(this.getCList("SUPPORT",5));
     this.setCMenu();
@@ -573,7 +492,7 @@ export default {
   display: block;
   clear: both;
 }
-.x{
-  margin-bottom:5px;
+.x {
+  margin-bottom: 5px;
 }
 </style>

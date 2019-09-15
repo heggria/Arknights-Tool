@@ -29,7 +29,6 @@
         title="技能期间均总伤"
         :value="((this.hrut*this.testInfo.c.atkTimes)*(15/this.finalAttckTime)).toFixed(1)"
       ></value>
-      <el-button @click="test()">默认按钮</el-button>
     </div>
   </div>
 </template>
@@ -266,10 +265,6 @@ export default {
         this.testInfo.c.phySuscep,
         this.testInfo.c.spellSuscep
       );
-    },
-    test() {
-      this.$store.commit("newNum", 1);
-      console.log(this.$store.getters.getChangedNum);
     }
   }
 };

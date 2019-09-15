@@ -30,7 +30,8 @@ vuex ×
 
 ## Project setup
 ```
-npm install //速度慢请使用cnpm
+npm install 
+速度慢请使用cnpm或npm install --registry=https://registry.npm.taobao.org
 ```
 
 ### Compiles and hot-reloads for development
