@@ -124,10 +124,10 @@ const mutations = {
     state.config.fullSimulation = a;
   }
 };
-const actions = {
+const actions = {/*
   setNewEnemyData(context, n) {
     context.commit('newEnemyData', n)
-  },
+  },*/
   setCharData(context, n) {
     context.commit('newCharData', n)
   },

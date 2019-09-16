@@ -18,7 +18,7 @@ export default {
   props: ["lable", "defaultValue"],
   data() {
     return {
-      enemyData: this.$store.getters.getEnemyData,
+      //enemyData: this.$store.getters.getEnemyData,
       value: false
     };
   },
@@ -42,7 +42,7 @@ export default {
           this.enemyData[this.defaultValue] = this.value;
         }
       }
-      this.$store.dispatch("setNewEnemyData", this.enemyData);
+      //this.$store.dispatch("setNewEnemyData", this.enemyData);
       //console.log(this.$store.getters.getEnemyData.silenceImmune)
     }
   }

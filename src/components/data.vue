@@ -45,7 +45,7 @@ export default {
   data() {
     return {
       cInfo: this.$store.getters.getCharData,
-      eInfo: this.$store.getters.getEnemyData
+      //eInfo: this.$store.getters.getEnemyData
     };
   },
   components: { value: value },

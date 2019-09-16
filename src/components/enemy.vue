@@ -28,7 +28,6 @@ import switchC from "@/components/part/switchC";
 export default {
   data() {
     return {
-      enemyData: this.$store.getters.getEnemyData
     };
   },
   components: { inputnum: inputNum, switchC: switchC },

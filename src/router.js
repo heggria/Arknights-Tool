@@ -8,6 +8,8 @@ import test from './components/test'
 import enemy from './components/enemy'
 import data from './components/data'
 import battleSetting from './components/battleSetting'
+import lineChart from './components/draw/lineChart'
+import test2 from './components/test2'
 
 Vue.use(Router)
 
@@ -19,5 +21,7 @@ export default new Router({
         { path: '/enemy', name: 'enemy', component: enemy },
         { path: '/data', name: 'data', component: data },
         { path: '/battleSetting', name: 'battleSetting', component: battleSetting },
+        { path: '/lineChart', name: 'lineChart', component: lineChart },
+        { path: '/test2', name: 'test2', component: test2 },
     ]
 })

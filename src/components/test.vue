@@ -1,165 +1,132 @@
 <template>
-  <!--为echarts准备一个具备大小的容器dom-->
-  <div id="main" style="width: 800px;height: 500px;"></div>
+  <div>
+    <el-button @click="test2">测试对战</el-button>
+    <lineChart :data="lineData"></lineChart>
+  </div>
 </template>
 <script>
 /* eslint-disable */
-import echarts from "echarts";
+// 9.16  测试对战
+import { atkAction } from "@/components/calculate/calculate.js";
+import lineChart from "@/components/draw/lineChart";
 export default {
   name: "",
   data() {
     return {
-      charts: "",
-      opinionData: [],
-      eData:[],
-      baseData: {
-        c: {
-          atk:832,
-          blood: 2000,
-          atkSpeed: 1200,
-          def: 334,
-          treatment: 70
-        },
-        e: {
-          atk: 1850,
-          atkSpeed: 20000
-        }
-      },
-      lastAtkSpeed: 1200,
-      cLastAtkTime: 0,
-      eLastAtkTime: 0,
+      cData: {},
+      eData: {},
+      initTime: 0,
       nowTime: 0,
-      nowBlood: 2000,
-      eNowBlood: 37500
+      flowTime: 0,
+      cState: {
+        lastAckTime: 0,
+        lastAckSpeed: 0
+      },
+      eState: {
+        lastAckTime: 0,
+        lastAckSpeed: 0
+      },
+      lineData: [],
+      countTimeM: 0
     };
   },
+  components: {
+    lineChart: lineChart
+  },
   methods: {
-    drawLine(id) {
-      this.charts = echarts.init(document.getElementById(id));
-      this.charts.setOption({
-        tooltip: {
-          trigger: "axis",
-          formatter: "{b0}",
-          padding: [2, 8, 2, 8],
-          axisPointer: {
-            type: "cross"
-          },
-          show: true
-        },
-        grid: {
-          left: "5%",
-          right: "20%",
-          bottom: "0%",
-          top: "20%",
-          containLabel: true
-        },
-        toolbox: {
-          feature: {
-            saveAsImage: {},
-            restore: {},
-            dataZoom: {}
-          }
-        },
-        xAxis: {
-          name: "时间/ms",
-          type: "value",
-          boundaryGap: false,
-          axisPointer: { show: true },
-          max: function(value) {
-            return value.max;
-          },
-          min: function(value) {
-            return value.min;
-          }
-        },
-        yAxis: {
-          name: "血量",
-          type: "value",
-          axisPointer: { show: true },
-          max: function(value) {
-            return value.max;
-          },
-          min: function(value) {
-            return value.min;
-          }
-        },
-
-        series: [
-          {
-            name: "伤害量",
-            type: "line",
-            stack: "总量",
-            data: this.opinionData,
-            silent:true,
-            symbol:'none'
-          },          
-          {
-            name: "伤害",
-            type: "line",
-            stack: "总",
-            data: this.eData,
-            silent:true,
-            symbol:'none'
-          }
-        ]
-      });
+    initBattle() {
+      this.cData = {};
+      this.eData = {};
+      this.initTime = 0;
+      this.nowTime = 0;
+      this.flowTime = 0;
+      this.cState = {
+        lastAckTime: 0,
+        lastAckSpeed: 0
+      };
+      this.eState = {
+        lastAckTime: 0,
+        lastAckSpeed: 0
+      };
+      this.lineData = [];
+      this.countTimeM = 0;
+      // console.log(this.$store.getters.getTemporaryCD, this.$store.getters.getTemporaryED);
+      this.getBattleData();
     },
-    simulationData() {
-      this.opinionData = [];
-      this.round();
+    test2() {
+      window.clearTimeout(this.countTimeM);
+      this.initBattle();
+      this.initTime = new Date().valueOf();
+      this.test();
+      this.countTimeM = window.setInterval(this.test, 100);
     },
-    round() {
-      for (this.nowTime = 0; this.nowTime <= 100000; this.nowTime += 10) {
-        this.opinionData.push([this.nowTime, this.nowBlood]);
-        this.eData.push([this.nowTime, this.eNowBlood]);
-        this.cAtk();
-        this.eAtk();
+    test() {
+      this.battle();
+      this.lineData.push([
+        new Date().valueOf() - this.initTime,
+        this.eData.maxHp
+      ]);
+      if (this.flowTime >= 5000) {
+        window.clearTimeout(this.countTimeM);
       }
     },
-    cAtk() {
-      // console.log(this.lastAtkSpeed);
-      let changeAtkSpeed = this.lastAtkSpeed;
-      //获取当前血量，计算当前攻击间隔并保存上一次攻击的攻击间隔
-      if (this.nowBlood > this.baseData.c.blood * 0.3) {
-        changeAtkSpeed =
-          this.baseData.c.atkSpeed -
-          ((this.baseData.c.blood - this.nowBlood) /
-            (this.baseData.c.blood * 0.7)) *
-            this.baseData.c.atkSpeed/2;
-      }else{
-          changeAtkSpeed = this.baseData.c.atkSpeed/2
-      }
-      //获取当前攻击状态，如果上一次攻击结束，则进行攻击,并改变攻击间隔
-      if (this.nowTime===0||this.nowTime - this.lastAtkSpeed >= this.cLastAtkTime) {
-        //攻击回血
-        if (this.nowBlood + this.baseData.c.treatment <= this.baseData.c.blood) {
-          this.nowBlood += this.baseData.c.treatment;
-        } else {
-          this.nowBlood = this.baseData.c.blood;
+    battle() {
+      console.log(this.$store.state.enemyBaseData);
+      this.countTime();
+      let result;
+      //到达攻击时间
+      if (
+        this.cState.lastAckSpeed === 0 ||
+        this.flowTime - this.cState.lastAckTime >=
+          Math.floor(this.cState.lastAckSpeed * 1000)
+      ) {
+        //干员攻击
+        result = atkAction(this.cData, this.eData);
+        if (result.state === 0) {
+          console.log("敌方死亡");
+        } else if (result.state === 1) {
+          console.log("敌方存活");
         }
-        this.eNowBlood -= this.baseData.c.atk-300;
-        //置攻击时间和攻击间隔
-        this.cLastAtkTime = this.nowTime;
-        this.lastAtkSpeed = changeAtkSpeed;
+        //保存
+        this.afterAckSavaData(true, false, result);
+      }
+      //提交
+      // this.setBattleData();
+    },
+    //获取当前战斗数据
+    getBattleData() {
+      this.cData = this.$store.getters.getCharData;
+      this.eData = this.$store.getters.getEnemyData;
+      //console.log(this.$store.getters.getTemporaryCD,this.$store.getters.getTemporaryED);
+    },
+    setBattleData() {
+      this.$store.dispatch("setTemporaryED", this.eData);
+      this.$store.dispatch("setTemporaryCD", this.cData);
+      //console.log(this.$store.getters.getTemporaryCD,this.$store.getters.getTemporaryED);
+    },
+    // 攻击后保存数据
+    afterAckSavaData(c, e, result) {
+      this.cData = result.atkP;
+      this.eData = result.defP;
+      if (c === true) {
+        this.cState.lastAckTime = this.flowTime;
+        this.cState.lastAckSpeed = this.cData.baseAttackTime;
+      }
+      if (e === true) {
+        this.eState.lastAckTime = this.flowTime;
+        this.cState.lastAckSpeed = this.cData.baseAttackTime;
       }
     },
-    eAtk() {
-      //console.log();
-      //获取当前攻击状态，如果上一次攻击结束，则进行攻击,并改变攻击间隔
-      if (this.nowTime===0||this.nowTime - this.baseData.e.atkSpeed >= this.eLastAtkTime) {
-        //攻击
-        this.nowBlood -= this.baseData.e.atk;
-        //置攻击时间和攻击间隔
-        this.eLastAtkTime = this.nowTime;
-      }
+    countTime() {
+      this.nowTime = new Date().valueOf();
+      this.flowTime = this.nowTime - this.initTime;
     }
   },
-  //调用
-  mounted() {
-    this.$nextTick(function() {
-      this.simulationData();
-      this.drawLine("main");
-    });
+  created() {
+    //初始化战斗数据
+    //this.$store.dispatch("setTemporaryED", data1);
+    //this.$store.dispatch("setTemporaryCD", data2);
+    this.initBattle();
   }
 };
 </script>
