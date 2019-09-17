@@ -5,13 +5,13 @@
 <script>
 /* eslint-disable */
 import echarts from "echarts";
+import { clone } from "@/components/calculate/calculate.js";
 export default {
   name: "",
   data() {
     return {
       charts: "",
       opinionData: [],
-      eData: [],
       baseData: {
         c: {
           atk: 832,
@@ -33,15 +33,25 @@ export default {
       eNowBlood: 37500,
       valueX: "时间/ms",
       valueY: "血量",
-      
-      series : {
-        name: "伤害量",
-        type: "line",
-        stack: "总量",
-        data: [],
-        silent: true,
-        symbol: "none"
-      },
+
+      series: [
+        {
+          name: "干员血量",
+          type: "line",
+          stack: "总量",
+          data: [],
+          silent: true,
+          symbol: "none"
+        },
+        {
+          name: "敌方血量",
+          type: "line",
+          stack: "总量",
+          data: [],
+          silent: true,
+          symbol: "none"
+        }
+      ],
       opinion: {
         tooltip: {
           trigger: "axis",
@@ -89,16 +99,24 @@ export default {
             return value.min;
           }
         },
-        series: this.series
+        series: []
       }
     };
   },
-  props:["data"],
-  watch:{
-    data: function (val){
-      this.series.data=val;
+  props: ["cdata", "edata"],
+  watch: {
+    cdata: function(val) {
+      this.series[0].data = [];
+      this.series[0].data = clone(val);
+      this.opinion.series = clone(this.series);
+      this.charts.setOption(this.opinion);
+    },
+    edata: function(val) {
+      this.series[1].data = [];
+      this.series[1].data = clone(val);
       this.opinion.series = this.series;
       this.charts.setOption(this.opinion);
+      console.log(this.opinion.series);
     }
   },
   methods: {

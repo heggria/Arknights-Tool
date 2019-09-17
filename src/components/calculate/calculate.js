@@ -74,18 +74,16 @@ function countHurt(magicAtk, atk, def, spellR, phySuscep, spellSuscep) {
     props:攻击方，防御方
     return:攻击方与防御方对象
 */
-function atkAction(atkPx, defPx) {
-  let hurt = countHurt(atkPx.magicAtk, atkPx.atk, defPx.def, defPx.magicResistance, [1], [1]);
-  console.log(hurt, defPx.maxHp)
-  if (hurt >= defPx.maxHp) {
-    defPx.maxHp = 0;
+function atkAction(a, d) {
+  let hurt = countHurt(a.magicAtk, a.atk, d.def, d.magicResistance, [0], [0]);
+  if (hurt >= d.maxHp) {
+    d.maxHp = 0;
     //死亡
-    return { state: 0, atkP: atkPx, defP: defPx }
+    return { atkP: a, defP: d }
   } else {
     //未死亡
-    defPx.maxHp -= hurt;
-    //console.log(defP.maxHp)
-    return { state: 1, atkP: atkPx, defP: defPx }
+    d.maxHp -= hurt;
+    return { atkP: a, defP: d }
   }
 }
 /*
@@ -116,6 +114,9 @@ function multiply(x) {
   }
   return s;
 }
+function clone(obj){
+  return JSON.parse(JSON.stringify(obj));
+}
 export {
   atkAction,
   countAtk,
@@ -123,4 +124,5 @@ export {
   countDef,
   countHurt,
   countSpellR,
+  clone,
 }

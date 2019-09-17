@@ -1,13 +1,13 @@
 <template>
   <div>
     <el-button @click="test2">测试对战</el-button>
-    <lineChart :data="lineData"></lineChart>
+    <lineChart :cdata="charData" :edata="enemyData"></lineChart>
   </div>
 </template>
 <script>
 /* eslint-disable */
 // 9.16  测试对战
-import { atkAction } from "@/components/calculate/calculate.js";
+import { atkAction, clone } from "@/components/calculate/calculate.js";
 import lineChart from "@/components/draw/lineChart";
 export default {
   name: "",
@@ -26,7 +26,8 @@ export default {
         lastAckTime: 0,
         lastAckSpeed: 0
       },
-      lineData: [],
+      charData: [],
+      enemyData: [],
       countTimeM: 0
     };
   },
@@ -48,73 +49,90 @@ export default {
         lastAckTime: 0,
         lastAckSpeed: 0
       };
-      this.lineData = [];
+      this.charData = [];
+      this.enemyData = [];
       this.countTimeM = 0;
-      // console.log(this.$store.getters.getTemporaryCD, this.$store.getters.getTemporaryED);
+      //初始化战斗数据
+      this.$store.dispatch(
+        "setTemporaryED",
+        clone(this.$store.getters.getEnemyData)
+      );
+      this.$store.dispatch(
+        "setTemporaryCD",
+        clone(this.$store.getters.getCharData)
+      );
       this.getBattleData();
     },
     test2() {
       window.clearTimeout(this.countTimeM);
       this.initBattle();
       this.initTime = new Date().valueOf();
-      this.test();
-      this.countTimeM = window.setInterval(this.test, 100);
+      this.countTimeM = window.setInterval(this.test, 50);
     },
     test() {
       this.battle();
-      this.lineData.push([
-        new Date().valueOf() - this.initTime,
+      this.charData.push([
+        this.flowTime,
+        this.cData.maxHp
+      ]);
+      this.enemyData.push([
+        this.flowTime,
         this.eData.maxHp
       ]);
-      if (this.flowTime >= 5000) {
+      //console.log(this.enemyData);
+      if (this.flowTime >= 10000) {
         window.clearTimeout(this.countTimeM);
       }
     },
     battle() {
-      console.log(this.$store.state.enemyBaseData);
       this.countTime();
-      let result;
       //到达攻击时间
       if (
         this.cState.lastAckSpeed === 0 ||
         this.flowTime - this.cState.lastAckTime >=
-          Math.floor(this.cState.lastAckSpeed * 1000)
+          Math.floor(this.cState.lastAckSpeed * 1000)-5
       ) {
-        //干员攻击
-        result = atkAction(this.cData, this.eData);
-        if (result.state === 0) {
-          console.log("敌方死亡");
-        } else if (result.state === 1) {
-          console.log("敌方存活");
-        }
-        //保存
+        //攻击
+        let result = atkAction(clone(this.cData), clone(this.eData));
         this.afterAckSavaData(true, false, result);
-      }
+      }/*
+      if (
+        this.eState.lastAckSpeed === 0 ||
+        this.flowTime - this.eState.lastAckTime >=
+          Math.floor(this.eState.lastAckSpeed * 1000)-5
+      ) {
+        console.log(this.flowTime - this.eState.lastAckTime);
+        //攻击
+        let result = atkAction(clone(this.eData), clone(this.cData));
+        this.afterAckSavaData(false, true, result);
+      }*/
       //提交
-      // this.setBattleData();
+      this.setBattleData();
     },
     //获取当前战斗数据
     getBattleData() {
-      this.cData = this.$store.getters.getCharData;
-      this.eData = this.$store.getters.getEnemyData;
+      this.cData = clone(this.$store.getters.getTemporaryCD);
+      this.eData = clone(this.$store.getters.getTemporaryED);
       //console.log(this.$store.getters.getTemporaryCD,this.$store.getters.getTemporaryED);
     },
     setBattleData() {
-      this.$store.dispatch("setTemporaryED", this.eData);
-      this.$store.dispatch("setTemporaryCD", this.cData);
+      this.$store.dispatch("setTemporaryED", clone(this.eData));
+      this.$store.dispatch("setTemporaryCD", clone(this.cData));
       //console.log(this.$store.getters.getTemporaryCD,this.$store.getters.getTemporaryED);
     },
     // 攻击后保存数据
     afterAckSavaData(c, e, result) {
-      this.cData = result.atkP;
-      this.eData = result.defP;
       if (c === true) {
+        this.cData = clone(result.atkP);
+        this.eData = clone(result.defP);
         this.cState.lastAckTime = this.flowTime;
         this.cState.lastAckSpeed = this.cData.baseAttackTime;
       }
       if (e === true) {
+        this.eData = clone(result.atkP);
+        this.cData = clone(result.defP);
         this.eState.lastAckTime = this.flowTime;
-        this.cState.lastAckSpeed = this.cData.baseAttackTime;
+        this.eState.lastAckSpeed = this.eData.baseAttackTime;
       }
     },
     countTime() {
@@ -124,8 +142,14 @@ export default {
   },
   created() {
     //初始化战斗数据
-    //this.$store.dispatch("setTemporaryED", data1);
-    //this.$store.dispatch("setTemporaryCD", data2);
+    this.$store.dispatch(
+      "setTemporaryED",
+      clone(this.$store.getters.getCharData)
+    );
+    this.$store.dispatch(
+      "setTemporaryCD",
+      clone(this.$store.getters.getEnemyData)
+    );
     this.initBattle();
   }
 };
