@@ -34,24 +34,6 @@ export default {
       valueX: "时间/ms",
       valueY: "血量",
 
-      series: [
-        {
-          name: "干员血量",
-          type: "line",
-          stack: "总量",
-          data: [],
-          silent: true,
-          symbol: "none"
-        },
-        {
-          name: "敌方血量",
-          type: "line",
-          stack: "总量",
-          data: [],
-          silent: true,
-          symbol: "none"
-        }
-      ],
       opinion: {
         tooltip: {
           trigger: "axis",
@@ -99,24 +81,36 @@ export default {
             return value.min;
           }
         },
-        series: []
+        series: [
+          {
+            name: "干员血量",
+            type: "line",
+            stack: "干员血量总量",
+            data: [],
+            silent: true,
+            symbol: "none"
+          },
+          {
+            name: "敌方血量",
+            type: "line",
+            stack: "敌方血量总量",
+            data: [],
+            silent: true,
+            symbol: "none"
+          }
+        ]
       }
     };
   },
   props: ["cdata", "edata"],
   watch: {
     cdata: function(val) {
-      this.series[0].data = [];
-      this.series[0].data = clone(val);
-      this.opinion.series = clone(this.series);
+      this.opinion.series[0].data = val;
       this.charts.setOption(this.opinion);
     },
     edata: function(val) {
-      this.series[1].data = [];
-      this.series[1].data = clone(val);
-      this.opinion.series = this.series;
+      this.opinion.series[1].data = val;
       this.charts.setOption(this.opinion);
-      console.log(this.opinion.series);
     }
   },
   methods: {

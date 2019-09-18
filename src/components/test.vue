@@ -67,45 +67,39 @@ export default {
       window.clearTimeout(this.countTimeM);
       this.initBattle();
       this.initTime = new Date().valueOf();
-      this.countTimeM = window.setInterval(this.test, 50);
+      this.countTimeM = window.setInterval(this.test, 100);
     },
     test() {
+      this.charData.push([this.flowTime, this.cData.maxHp]);
+      this.enemyData.push([this.flowTime, this.eData.maxHp]);
       this.battle();
-      this.charData.push([
-        this.flowTime,
-        this.cData.maxHp
-      ]);
-      this.enemyData.push([
-        this.flowTime,
-        this.eData.maxHp
-      ]);
       //console.log(this.enemyData);
       if (this.flowTime >= 10000) {
         window.clearTimeout(this.countTimeM);
       }
     },
     battle() {
-      this.countTime();
       //到达攻击时间
+      this.countTime();
       if (
-        this.cState.lastAckSpeed === 0 ||
+        this.cState.lastAckTime === 0 ||
         this.flowTime - this.cState.lastAckTime >=
-          Math.floor(this.cState.lastAckSpeed * 1000)-5
+          Math.floor(this.cState.lastAckSpeed * 1000) - 10
       ) {
         //攻击
         let result = atkAction(clone(this.cData), clone(this.eData));
         this.afterAckSavaData(true, false, result);
-      }/*
+      }
       if (
-        this.eState.lastAckSpeed === 0 ||
+        this.eState.lastAckTime === 0 ||
         this.flowTime - this.eState.lastAckTime >=
-          Math.floor(this.eState.lastAckSpeed * 1000)-5
+          Math.floor(this.eState.lastAckSpeed * 1000) - 10
       ) {
-        console.log(this.flowTime - this.eState.lastAckTime);
+        //console.log(this.flowTime - this.eState.lastAckTime);
         //攻击
         let result = atkAction(clone(this.eData), clone(this.cData));
         this.afterAckSavaData(false, true, result);
-      }*/
+      }
       //提交
       this.setBattleData();
     },
