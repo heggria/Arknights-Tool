@@ -1,7 +1,9 @@
 <template>
   <div>
     <el-button @click="test2">测试对战</el-button>
-    <lineChart :cdata="charData" :edata="enemyData"></lineChart>
+    <el-button @click="test2">选择干员信息</el-button>
+    <el-button @click="test2">选择敌人信息</el-button>
+    <lineChart :cdata="charData" :edata="enemyData" :choose1="choose1" :choose2="choose2"></lineChart>
   </div>
 </template>
 <script>
@@ -13,6 +15,8 @@ export default {
   name: "",
   data() {
     return {
+      choose1:'maxHp',
+      choose2:'maxHp',
       cData: {},
       eData: {},
       initTime: 0,
@@ -70,11 +74,11 @@ export default {
       this.countTimeM = window.setInterval(this.test, 100);
     },
     test() {
-      this.charData.push([this.flowTime, this.cData.maxHp]);
-      this.enemyData.push([this.flowTime, this.eData.maxHp]);
+      this.charData.push([this.flowTime, this.cData]);
+      this.enemyData.push([this.flowTime, this.eData]);
       this.battle();
       //console.log(this.enemyData);
-      if (this.flowTime >= 10000) {
+      if (this.flowTime >= 10000+10) {
         window.clearTimeout(this.countTimeM);
       }
     },

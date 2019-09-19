@@ -12,28 +12,8 @@ export default {
     return {
       charts: "",
       opinionData: [],
-      baseData: {
-        c: {
-          atk: 832,
-          blood: 2000,
-          atkSpeed: 1200,
-          def: 334,
-          treatment: 70
-        },
-        e: {
-          atk: 1850,
-          atkSpeed: 20000
-        }
-      },
-      lastAtkSpeed: 1200,
-      cLastAtkTime: 0,
-      eLastAtkTime: 0,
-      initTime: new Date().valueOf(),
-      nowBlood: 2000,
-      eNowBlood: 37500,
       valueX: "时间/ms",
       valueY: "血量",
-
       opinion: {
         tooltip: {
           trigger: "axis",
@@ -102,13 +82,14 @@ export default {
       }
     };
   },
-  props: ["cdata", "edata"],
+  props: ["cdata", "edata", "choose1", "choose2"],
   watch: {
     cdata: function(val) {
       this.opinion.series[0].data = val;
       this.charts.setOption(this.opinion);
     },
     edata: function(val) {
+      console.log(val);
       this.opinion.series[1].data = val;
       this.charts.setOption(this.opinion);
     }
@@ -117,7 +98,7 @@ export default {
     drawLine(id) {
       this.charts = echarts.init(document.getElementById(id));
       this.charts.setOption(this.opinion);
-    },
+    },/*
     cAtk() {
       // console.log(this.lastAtkSpeed);
       let changeAtkSpeed = this.lastAtkSpeed;
@@ -164,7 +145,7 @@ export default {
         //置攻击时间和攻击间隔
         this.eLastAtkTime = this.nowTime;
       }
-    }
+    }*/
   },
   //调用
   mounted() {
