@@ -89,8 +89,11 @@ export default {
       this.charts.setOption(this.opinion);
     },
     edata: function(val) {
-      console.log(val);
-      this.opinion.series[1].data = val;
+      this.opinion.series[1].data = val.maxHp;
+      let new2=[];
+      for(let index in val){
+        new2
+      }
       this.charts.setOption(this.opinion);
     }
   },
