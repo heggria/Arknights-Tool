@@ -12,6 +12,8 @@ export default {
     return {
       charts: "",
       opinionData: [],
+      cd: {},
+      ed: {},
       valueX: "时间/ms",
       valueY: "血量",
       opinion: {
@@ -50,23 +52,35 @@ export default {
             return value.min;
           }
         },
-        yAxis: {
+        yAxis: [{
           name: this.valueY,
           type: "value",
           axisPointer: { show: true },
           max: function(value) {
-            return value.max;
+            return value.max/4*5;
+          },
+          min: function(value) {
+            return value.min;
+          }
+        },{
+          name: this.valueY,
+          type: "value",
+          axisPointer: { show: true },
+          max: function(value) {
+            return value.max/4*5;
           },
           min: function(value) {
             return value.min;
           }
         },
+        ],
         series: [
           {
             name: "干员血量",
             type: "line",
             stack: "干员血量总量",
             data: [],
+            yAxisIndex: 0,
             silent: true,
             symbol: "none"
           },
@@ -75,6 +89,7 @@ export default {
             type: "line",
             stack: "敌方血量总量",
             data: [],
+            yAxisIndex: 1,
             silent: true,
             symbol: "none"
           }
@@ -82,18 +97,48 @@ export default {
       }
     };
   },
-  props: ["cdata", "edata", "choose1", "choose2"],
+  props: ["cdata", "edata"],
+  computed: {
+    choose1() {
+      return this.$store.state.config.cV;
+    },
+    choose2() {
+      return this.$store.state.config.eV;
+    }
+  },
   watch: {
     cdata: function(val) {
-      this.opinion.series[0].data = val;
+      this.cd = val;
+      let new1 = [];
+      for (let index in val) {
+        new1.push([val[index][0], val[index][1][this.$store.state.config.cV]]);
+      }
+      this.opinion.series[0].data = new1;
       this.charts.setOption(this.opinion);
     },
     edata: function(val) {
-      this.opinion.series[1].data = val.maxHp;
-      let new2=[];
-      for(let index in val){
-        new2
+      this.ed = val;
+      let new2 = [];
+      for (let index in val) {
+        new2.push([val[index][0], val[index][1][this.$store.state.config.eV]]);
       }
+      this.opinion.series[1].data = new2;
+      this.charts.setOption(this.opinion);
+    },
+    choose1: function(val) {
+      let new1 = [];
+      for (let index in this.cd) {
+        new1.push([this.cd[index][0], this.cd[index][1][val]]);
+      }
+      this.opinion.series[0].data = new1;
+      this.charts.setOption(this.opinion);
+    },
+    choose2: function(val) {
+      let new2 = [];
+      for (let index in this.ed) {
+        new2.push([this.ed[index][0], this.ed[index][1][val]]);
+      }
+      this.opinion.series[1].data = new2;
       this.charts.setOption(this.opinion);
     }
   },
@@ -101,7 +146,7 @@ export default {
     drawLine(id) {
       this.charts = echarts.init(document.getElementById(id));
       this.charts.setOption(this.opinion);
-    },/*
+    } /*
     cAtk() {
       // console.log(this.lastAtkSpeed);
       let changeAtkSpeed = this.lastAtkSpeed;

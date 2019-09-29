@@ -4,7 +4,7 @@ Vue.use(Vuex);
 const state = {
   enemyBaseData: {
     'maxHp': 10000,
-    'atk': 4000,
+    'atk': 5000,
     'baseAttackTime': 1,
     'atkTimes': 1,
     'def': 1000,
@@ -12,12 +12,12 @@ const state = {
     'moveSpeed': 1,
     'hpRecoveryPerSec': 0,
     'massLevel': 0,
-    'magicAtk': true,
-    'stunImmune': true,
-    'silenceImmune': true,
+    'magicAtk': false,
+    'stunImmune': false,
+    'silenceImmune': false,
   },
   charBaseData: {
-    "maxHp": 20000,
+    "maxHp": 200000,
     "atk": 1200,
     "def": 200,
     "magicResistance": 100.0,
@@ -54,6 +54,8 @@ const state = {
     charAtk: true,
     enemyAtk: true,
     assault: false,
+    cV: 'maxHp',
+    eV: 'maxHp'
   }
 };
 const getters = {

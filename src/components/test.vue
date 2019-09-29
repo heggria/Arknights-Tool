@@ -1,9 +1,11 @@
 <template>
   <div>
-    <el-button @click="test2">测试对战</el-button>
-    <el-button @click="test2">选择干员信息</el-button>
-    <el-button @click="test2">选择敌人信息</el-button>
-    <lineChart :cdata="charData" :edata="enemyData" :choose1="choose1" :choose2="choose2"></lineChart>
+    <div>
+      <el-button @click="start">开始</el-button>
+      <el-button @click="stop">停止</el-button>
+    </div>
+    <battleSetting style="float:left"></battleSetting>
+    <lineChart style="float:left" :cdata="charData" :edata="enemyData"></lineChart>
   </div>
 </template>
 <script>
@@ -11,12 +13,11 @@
 // 9.16  测试对战
 import { atkAction, clone } from "@/components/calculate/calculate.js";
 import lineChart from "@/components/draw/lineChart";
+import battleSetting from "@/components/battleSetting";
 export default {
   name: "",
   data() {
     return {
-      choose1:'maxHp',
-      choose2:'maxHp',
       cData: {},
       eData: {},
       initTime: 0,
@@ -36,7 +37,8 @@ export default {
     };
   },
   components: {
-    lineChart: lineChart
+    lineChart: lineChart,
+    battleSetting: battleSetting
   },
   methods: {
     initBattle() {
@@ -67,22 +69,26 @@ export default {
       );
       this.getBattleData();
     },
-    test2() {
+    start() {
       window.clearTimeout(this.countTimeM);
       this.initBattle();
       this.initTime = new Date().valueOf();
       this.countTimeM = window.setInterval(this.test, 100);
+    },
+    stop() {
+      window.clearTimeout(this.countTimeM);
     },
     test() {
       this.charData.push([this.flowTime, this.cData]);
       this.enemyData.push([this.flowTime, this.eData]);
       this.battle();
       //console.log(this.enemyData);
-      if (this.flowTime >= 10000+10) {
+      if (this.flowTime >= 10000 + 10) {
         window.clearTimeout(this.countTimeM);
       }
     },
     battle() {
+      this.getBattleData();
       //到达攻击时间
       this.countTime();
       if (
@@ -136,6 +142,10 @@ export default {
     countTime() {
       this.nowTime = new Date().valueOf();
       this.flowTime = this.nowTime - this.initTime;
+    },
+    atkPlus() {
+      this.$store.state.temporaryED.atk *= 2.5;
+      //console.log(this.$store.state.temporaryED.atk);
     }
   },
   created() {
@@ -149,13 +159,12 @@ export default {
       clone(this.$store.getters.getEnemyData)
     );
     this.initBattle();
-  }
+  },
 };
 </script>
 <style scoped>
 * {
   margin: 0;
   padding: 0;
-  list-style: none;
 }
 </style>
