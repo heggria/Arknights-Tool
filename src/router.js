@@ -10,6 +10,8 @@ import data from './components/data'
 import battleSetting from './components/battleSetting'
 import lineChart from './components/draw/lineChart'
 import test2 from './components/test2'
+import map from './components/map'
+import test3 from './components/test3'
 
 Vue.use(Router)
 
@@ -23,5 +25,7 @@ export default new Router({
         { path: '/battleSetting', name: 'battleSetting', component: battleSetting },
         { path: '/lineChart', name: 'lineChart', component: lineChart },
         { path: '/test2', name: 'test2', component: test2 },
+        { path: '/map', name: 'map', component: map },
+        { path: '/test3', name: 'test3', component: test3 },
     ]
 })
