@@ -54,6 +54,16 @@ export default {
       }
       console.log(this.$store.state.mapMeta.runData);
     }
+  },
+  computed: {
+    change() {
+      return this.$store.state.mapMeta.attackDisplay;
+    }
+  },
+  watch: {
+    change: function(val) {
+      console.log(1);
+    }
   }
 };
 </script>

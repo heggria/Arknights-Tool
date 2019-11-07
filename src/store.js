@@ -62,6 +62,7 @@ const state = {
   mapMeta: {
     mapData: level.mapData,
     runData: [],
+    attackDisplay:true,
     char: {
       position: 70,
       range: range1["3-1"]
