@@ -1,5 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import level from "@/assets/levels/obt/campaign/level_camp_03.json";
+import range1 from "@/assets/range_table.json";
 Vue.use(Vuex);
 const state = {
   enemyBaseData: {
@@ -56,6 +58,14 @@ const state = {
     assault: false,
     cV: 'maxHp',
     eV: 'maxHp'
+  },
+  mapMeta: {
+    mapData: level.mapData,
+    runData: [],
+    char: {
+      position: 70,
+      range: range1["3-1"]
+    }
   }
 };
 const getters = {
